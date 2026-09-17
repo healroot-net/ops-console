@@ -1,0 +1,35 @@
+# Ops Console (for AI Assistants & Agents)
+
+> Ultra-lightweight self-hosted server observability & PM2 process control dashboard designed for 1GB VPS & indie developers.
+
+## Architecture Summary
+- **Framework**: Next.js 15 (App Router, Standalone mode), React 19, TailwindCSS, TypeScript.
+- **Runtime Resource Usage**: ~70-80MB RAM, <0.1% idle CPU, ~15MB bundle size.
+- **Config Storage**: Single JSON file located at `~/.ops/config.json` (or `process.env.OPS_CONFIG_PATH`).
+- **Core Capabilities**:
+  1. System Telemetry (CPU, Memory, Disk, Load Average, Uptime via Linux `/proc` and macOS `vm_stat`).
+  2. PM2 Process Lifecycle (inspect `pm2 jlist`, restart/stop/start via child_process, log streaming).
+  3. HTTP Target Probes (dynamic endpoints checked periodically).
+  4. Real-time Push Alerts (via free ntfy.sh topics).
+
+## Key Files & Directories
+- `src/lib/config.ts`: Loads and persists `~/.ops/config.json`. Add custom settings here.
+- `src/lib/monitor/system.ts`: Cross-platform host hardware metrics.
+- `src/lib/monitor/pm2.ts`: PM2 integration and flapping detection.
+- `src/lib/monitor/health.ts`: HTTP target probe engine.
+- `src/lib/alerts/ntfy.ts`: Mobile push alert dispatcher.
+- `src/worker/daemon.ts`: Background polling daemon.
+- `src/app/api/`: REST APIs for metrics, PM2, and config updates.
+- `bin/ops.js`: CLI binary (`ops start -p 9999`).
+
+## How to Customize via AI Agent
+- **Add custom monitoring targets**: Modify `~/.ops/config.json` under the `"targets"` array or use `POST /api/config`.
+- **Change Alerting (e.g. Telegram / Slack / Discord)**: Edit `src/lib/alerts/ntfy.ts` or add a new alert provider alongside it.
+- **Attach Cloudflare Tunnel**: Run `cloudflared tunnel run` pointing port 9999 to your domain.
+
+## Default Ports & Endpoints
+- Default Web Port: `9999`
+- API Metrics: `GET /api/metrics`
+- API PM2 Control: `POST /api/pm2` (`{ target, action }`)
+- API Config: `GET /api/config`, `POST /api/config`
+- API Logs: `GET /api/logs?process=<name>&lines=100`
