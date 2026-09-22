@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { executePM2Action } from '@/lib/monitor/pm2';
 import { isAuthorized } from '@/lib/auth';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: NextRequest) {
   if (!isAuthorized(req)) {
     return NextResponse.json(

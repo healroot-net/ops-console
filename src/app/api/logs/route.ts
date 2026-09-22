@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { readRecentLogs } from '@/lib/monitor/logWatcher';
 import { isAuthorized } from '@/lib/auth';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: NextRequest) {
   if (!isAuthorized(req)) {
     return NextResponse.json({ success: false, error: 'Unauthorized.' }, { status: 401 });

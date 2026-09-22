@@ -94,22 +94,24 @@ export async function getPM2Processes(): Promise<PM2Process[]> {
       };
     });
   } catch (error: any) {
-    // If pm2 is not running or no processes exist, return empty array safely
     return [];
   }
 }
 
 export async function executePM2Action(
   target: string | number,
-  action: 'restart' | 'stop' | 'start' | 'reload' | 'delete' | 'reset'
+  action: 'restart' | 'stop' | 'start' | 'reload' | 'delete' | 'reset' | 'flush'
 ): Promise<{ success: boolean; message: string }> {
   try {
-    const validActions = ['restart', 'stop', 'start', 'reload', 'delete', 'reset'];
+    const validActions = ['restart', 'stop', 'start', 'reload', 'delete', 'reset', 'flush'];
     if (!validActions.includes(action)) {
       throw new Error(`Invalid PM2 action: ${action}`);
     }
 
-    const command = `${SYSTEM_PATH} pm2 ${action} ${target}`;
+    const command = action === 'flush' && target === 'all'
+      ? `${SYSTEM_PATH} pm2 flush`
+      : `${SYSTEM_PATH} pm2 ${action} ${target}`;
+
     const { stdout, stderr } = await execAsync(command, { timeout: 10000 });
 
     return {

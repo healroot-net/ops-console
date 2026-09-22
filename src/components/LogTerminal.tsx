@@ -1,17 +1,25 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Terminal, X, RefreshCw, AlertCircle } from 'lucide-react';
+import { Terminal, X, RefreshCw, AlertCircle, Trash2 } from 'lucide-react';
 
 interface LogTerminalProps {
   processName: string | null;
   onClose: () => void;
+  onRequestAuth?: () => void;
+  isAuthenticated?: boolean;
 }
 
-export function LogTerminal({ processName, onClose }: LogTerminalProps) {
+export function LogTerminal({
+  processName,
+  onClose,
+  onRequestAuth,
+  isAuthenticated = false,
+}: LogTerminalProps) {
   const [activeTab, setActiveTab] = useState<'out' | 'err'>('out');
   const [logs, setLogs] = useState<{ out: string[]; err: string[] }>({ out: [], err: [] });
   const [loading, setLoading] = useState(false);
+  const [flushing, setFlushing] = useState(false);
   const [autoRefresh, setAutoRefresh] = useState(true);
 
   const fetchLogs = async () => {
@@ -27,6 +35,37 @@ export function LogTerminal({ processName, onClose }: LogTerminalProps) {
       console.error('Failed to fetch logs:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleFlushLogs = async () => {
+    if (!isAuthenticated && onRequestAuth) {
+      onRequestAuth();
+      return;
+    }
+
+    if (!confirm(`Are you sure you want to flush and clear log files for "${processName}"?`)) {
+      return;
+    }
+
+    setFlushing(true);
+    try {
+      const res = await fetch('/api/pm2', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ target: processName, action: 'flush' }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setLogs({ out: [], err: [] });
+        await fetchLogs();
+      } else {
+        alert(json.error || 'Failed to flush logs');
+      }
+    } catch {
+      alert('Network error while flushing logs.');
+    } finally {
+      setFlushing(false);
     }
   };
 
@@ -58,7 +97,18 @@ export function LogTerminal({ processName, onClose }: LogTerminalProps) {
           </div>
 
           <div className="flex items-center gap-3">
-            <label className="flex items-center gap-1.5 text-xs text-slate-400 cursor-pointer select-none">
+            {/* Flush Logs Button (pm2 flush) */}
+            <button
+              disabled={flushing}
+              onClick={handleFlushLogs}
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-slate-800 hover:bg-rose-950/50 hover:text-rose-300 border border-slate-700 hover:border-rose-800/50 text-xs text-slate-300 transition-colors disabled:opacity-50"
+              title="Flush and clear PM2 logs on disk (pm2 flush)"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>{flushing ? 'Flushing...' : 'Flush Logs'}</span>
+            </button>
+
+            <label className="hidden sm:flex items-center gap-1.5 text-xs text-slate-400 cursor-pointer select-none">
               <input
                 type="checkbox"
                 checked={autoRefresh}

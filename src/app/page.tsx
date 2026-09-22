@@ -11,7 +11,7 @@ import { AddServiceModal } from '@/components/AddServiceModal';
 import { SystemMetrics } from '@/lib/monitor/system';
 import { PM2Process } from '@/lib/monitor/pm2';
 import { HealthCheckResult } from '@/lib/monitor/health';
-import { RefreshCw, Bell, Lock, Unlock, ShieldCheck, Activity } from 'lucide-react';
+import { RefreshCw, Bell, Lock, Unlock, Activity } from 'lucide-react';
 
 export default function DashboardPage() {
   const [system, setSystem] = useState<SystemMetrics | null>(null);
@@ -77,8 +77,11 @@ export default function DashboardPage() {
     return () => clearInterval(timer);
   }, [autoRefresh, fetchMetrics]);
 
-  // PM2 Action handler
-  const handlePM2Action = async (target: string | number, action: 'restart' | 'stop' | 'start') => {
+  // PM2 Action handler (restart, stop, start, reset, flush)
+  const handlePM2Action = async (
+    target: string | number,
+    action: 'restart' | 'stop' | 'start' | 'reset'
+  ) => {
     try {
       const res = await fetch('/api/pm2', {
         method: 'POST',
@@ -89,7 +92,7 @@ export default function DashboardPage() {
       if (json.success) {
         await fetchMetrics();
       } else {
-        alert(json.error || `Failed to ${action} process.`);
+        alert(json.error || `Failed to execute ${action} on ${target}.`);
       }
     } catch {
       alert('Failed to connect to server.');
@@ -135,6 +138,11 @@ export default function DashboardPage() {
     } catch {
       alert('Failed to remove target.');
     }
+  };
+
+  // Manual Probe Target
+  const handleProbeTarget = async () => {
+    await fetchMetrics();
   };
 
   return (
@@ -239,6 +247,8 @@ export default function DashboardPage() {
             services={services}
             onOpenAddModal={() => (isAuthenticated ? setIsAddModalOpen(true) : setIsAuthModalOpen(true))}
             onDeleteTarget={handleDeleteTarget}
+            onProbeTarget={handleProbeTarget}
+            onProbeAll={handleProbeTarget}
             isAuthenticated={isAuthenticated}
           />
         </section>
@@ -274,6 +284,8 @@ export default function DashboardPage() {
       <LogTerminal
         processName={activeLogProcess}
         onClose={() => setActiveLogProcess(null)}
+        onRequestAuth={() => setIsAuthModalOpen(true)}
+        isAuthenticated={isAuthenticated}
       />
     </div>
   );
