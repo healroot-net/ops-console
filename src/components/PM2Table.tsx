@@ -104,7 +104,7 @@ export function PM2Table({
   };
 
   return (
-    <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-900/70 backdrop-blur-md font-mono">
+    <div className="glass-panel rounded-xl overflow-hidden border border-slate-800/80 font-mono">
       {/* 1. Header Toolbar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 px-4 py-3">
         <div className="flex items-center gap-2">

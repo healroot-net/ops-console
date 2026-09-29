@@ -10,7 +10,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
-  themeColor: '#020617',
+  themeColor: '#070a11',
 };
 
 export default function RootLayout({
@@ -20,7 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className="bg-slate-950 text-slate-100 antialiased selection:bg-cyan-500/30 selection:text-cyan-200">
+      <body className="cyber-grid min-h-screen bg-[#070a11] text-slate-200 antialiased selection:bg-cyan-500/30 selection:text-cyan-200">
         {children}
       </body>
     </html>

@@ -13,7 +13,7 @@ export function MetricCards({ system }: MetricCardsProps) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 animate-pulse">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="h-32 bg-slate-900/60 rounded-xl border border-slate-800" />
+          <div key={i} className="h-32 glass-panel rounded-xl" />
         ))}
       </div>
     );
@@ -38,7 +38,7 @@ export function MetricCards({ system }: MetricCardsProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-mono">
       {/* 1. CPU Card */}
-      <div className="relative overflow-hidden rounded-xl border border-slate-800 bg-slate-900/70 p-4 backdrop-blur-md transition-all hover:border-slate-700">
+      <div className="glass-panel rounded-xl p-4 relative overflow-hidden transition-all hover:border-slate-700">
         <div className="flex items-center justify-between">
           <span className="text-xs font-medium text-slate-400 flex items-center gap-1.5">
             <Cpu className="w-4 h-4 text-cyan-400" />
@@ -64,7 +64,7 @@ export function MetricCards({ system }: MetricCardsProps) {
       </div>
 
       {/* 2. Memory Card */}
-      <div className="relative overflow-hidden rounded-xl border border-slate-800 bg-slate-900/70 p-4 backdrop-blur-md transition-all hover:border-slate-700">
+      <div className="glass-panel rounded-xl p-4 relative overflow-hidden transition-all hover:border-slate-700">
         <div className="flex items-center justify-between">
           <span className="text-xs font-medium text-slate-400 flex items-center gap-1.5">
             <Server className="w-4 h-4 text-indigo-400" />
@@ -94,7 +94,7 @@ export function MetricCards({ system }: MetricCardsProps) {
       </div>
 
       {/* 3. Disk Card */}
-      <div className="relative overflow-hidden rounded-xl border border-slate-800 bg-slate-900/70 p-4 backdrop-blur-md transition-all hover:border-slate-700">
+      <div className="glass-panel rounded-xl p-4 relative overflow-hidden transition-all hover:border-slate-700">
         <div className="flex items-center justify-between">
           <span className="text-xs font-medium text-slate-400 flex items-center gap-1.5">
             <HardDrive className="w-4 h-4 text-emerald-400" />
@@ -122,7 +122,7 @@ export function MetricCards({ system }: MetricCardsProps) {
       </div>
 
       {/* 4. Host & Uptime Card */}
-      <div className="relative overflow-hidden rounded-xl border border-slate-800 bg-slate-900/70 p-4 backdrop-blur-md transition-all hover:border-slate-700">
+      <div className="glass-panel rounded-xl p-4 relative overflow-hidden transition-all hover:border-slate-700">
         <div className="flex items-center justify-between">
           <span className="text-xs font-medium text-slate-400 flex items-center gap-1.5">
             <Clock className="w-4 h-4 text-amber-400" />

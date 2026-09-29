@@ -18,6 +18,7 @@ export interface OpsConfig {
   pin: string;
   secret: string;
   allowLocalOnly: boolean;
+  requireAuth: boolean;
   ntfy: {
     enabled: boolean;
     server: string;
@@ -36,15 +37,16 @@ function generateRandomSecret(): string {
 
 export function getDefaultConfig(): OpsConfig {
   return {
-    port: 9999,
+    port: 3000,
     pin: process.env.OPS_PIN || '8888',
     secret: process.env.OPS_SECRET || generateRandomSecret(),
     allowLocalOnly: false,
+    requireAuth: true,
     ntfy: {
       enabled: true,
       server: process.env.NTFY_SERVER || 'https://ntfy.sh',
       topic: process.env.NTFY_TOPIC || `ops-${crypto.randomBytes(4).toString('hex')}`,
-      dashboardUrl: process.env.OPS_DASHBOARD_URL || 'http://localhost:9999',
+      dashboardUrl: process.env.OPS_DASHBOARD_URL || 'http://localhost:3000',
     },
     targets: [
       {
@@ -74,10 +76,10 @@ export function loadOpsConfig(): OpsConfig {
     const raw = fs.readFileSync(CONFIG_FILE_PATH, 'utf-8');
     const parsed = JSON.parse(raw);
 
-    // Merge with defaults in case of missing keys
     const merged: OpsConfig = {
       ...getDefaultConfig(),
       ...parsed,
+      requireAuth: typeof parsed.requireAuth === 'boolean' ? parsed.requireAuth : true,
       ntfy: {
         ...getDefaultConfig().ntfy,
         ...(parsed.ntfy || {}),
@@ -104,6 +106,18 @@ export function saveOpsConfig(newConfig: OpsConfig): boolean {
     console.error('Failed to save ops config:', error);
     return false;
   }
+}
+
+export function updatePin(newPin: string): boolean {
+  if (!newPin || newPin.trim().length < 4) return false;
+  const config = loadOpsConfig();
+  config.pin = newPin.trim();
+  return saveOpsConfig(config);
+}
+
+export function isDefaultPin(): boolean {
+  const config = loadOpsConfig();
+  return config.pin === '8888';
 }
 
 export function addMonitoredTarget(target: Omit<MonitoredTarget, 'id'>): MonitoredTarget {

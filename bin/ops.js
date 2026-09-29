@@ -3,7 +3,6 @@
 const { spawn, execSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
-const os = require('os');
 
 const projectRoot = path.join(__dirname, '..');
 const args = process.argv.slice(2);
@@ -14,7 +13,7 @@ function getPort() {
   if (portIdx !== -1 && args[portIdx + 1]) {
     return parseInt(args[portIdx + 1], 10);
   }
-  return process.env.PORT || 9999;
+  return process.env.PORT || 3000;
 }
 
 const port = getPort();
@@ -24,13 +23,13 @@ function printHelp() {
 Ops Console - Lightweight Server Observability & PM2 Dashboard
 
 Usage:
-  ops start [-p <port>]     Start Ops Console dashboard and background monitor
-  ops dev [-p <port>]       Start in development mode
+  ops start [-p <port>]     Start Ops Console dashboard in standalone mode
+  ops dev [-p <port>]       Start in Next.js development mode
   ops status                Check current running status
   ops help                  Show this help message
 
 Options:
-  -p, --port <number>       Port number to bind (Default: 9999)
+  -p, --port <number>       Port number to bind (Default: 3000)
 `);
 }
 
@@ -62,18 +61,18 @@ if (command === 'dev') {
   });
   child.on('exit', (code) => process.exit(code || 0));
 } else if (command === 'start') {
-  // Check if build exists, if not run build
-  const nextDir = path.join(projectRoot, '.next');
-  if (!fs.existsSync(nextDir)) {
-    console.log('Production build not found. Running "next build"...');
-    execSync('npx next build', { cwd: projectRoot, stdio: 'inherit' });
+  const standaloneServer = path.join(projectRoot, '.next', 'standalone', 'server.js');
+  
+  if (!fs.existsSync(standaloneServer)) {
+    console.log('Production build not found. Running "npm run build"...');
+    execSync('npm run build', { cwd: projectRoot, stdio: 'inherit' });
   }
 
-  console.log(`Starting Ops Console on port ${port} (http://localhost:${port})...`);
-  const child = spawn('npx', ['next', 'start', '-p', String(port)], {
-    cwd: projectRoot,
+  console.log(`Starting Ops Console on port ${port} (http://localhost:${port}) [Standalone RAM ~75MB]...`);
+  const child = spawn('node', [standaloneServer], {
+    cwd: path.join(projectRoot, '.next', 'standalone'),
     stdio: 'inherit',
-    env: { ...process.env, PORT: String(port) },
+    env: { ...process.env, PORT: String(port), HOSTNAME: '0.0.0.0' },
   });
 
   child.on('exit', (code) => process.exit(code || 0));

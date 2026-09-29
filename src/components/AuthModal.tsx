@@ -1,15 +1,16 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Lock, X, KeyRound } from 'lucide-react';
+import { Lock, X, KeyRound, AlertCircle } from 'lucide-react';
 
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  isDefaultPin?: boolean;
 }
 
-export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
+export function AuthModal({ isOpen, onClose, onSuccess, isDefaultPin }: AuthModalProps) {
   const [pin, setPin] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -45,7 +46,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 font-mono">
-      <div className="relative w-full max-w-sm rounded-2xl border border-slate-800 bg-slate-950 p-6 shadow-2xl">
+      <div className="relative w-full max-w-sm rounded-2xl glass-panel border border-slate-800/80 p-6 shadow-2xl">
         <div className="flex items-center justify-between border-b border-slate-800 pb-3">
           <div className="flex items-center gap-2">
             <Lock className="w-5 h-5 text-indigo-400" />
@@ -58,8 +59,9 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
 
         <form onSubmit={handleSubmit} className="mt-4 space-y-4 text-xs">
           {error && (
-            <div className="p-2.5 rounded-lg border border-rose-500/30 bg-rose-950/30 text-rose-300">
-              {error}
+            <div className="flex items-center gap-2 p-2.5 rounded-lg border border-rose-500/30 bg-rose-950/30 text-rose-300">
+              <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+              <span>{error}</span>
             </div>
           )}
 
@@ -77,9 +79,11 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
               />
               <KeyRound className="w-4 h-4 text-slate-500 absolute right-3 top-3 pointer-events-none" />
             </div>
-            <p className="mt-1 text-[11px] text-slate-500">
-              Default PIN is configured in <code className="text-slate-400">~/.ops/config.json</code>
-            </p>
+            {isDefaultPin && (
+              <p className="mt-2 text-[11px] text-amber-400/90 bg-amber-950/30 border border-amber-800/30 rounded p-1.5 text-center">
+                Initial Default PIN is <span className="font-bold underline">8888</span>
+              </p>
+            )}
           </div>
 
           <div className="pt-2 flex justify-end gap-2">

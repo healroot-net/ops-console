@@ -58,7 +58,7 @@ export function AddServiceModal({ isOpen, onClose, onAdd }: AddServiceModalProps
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 font-mono">
-      <div className="relative w-full max-w-md rounded-2xl border border-slate-800 bg-slate-950 p-6 shadow-2xl">
+      <div className="relative w-full max-w-md rounded-2xl glass-panel border border-slate-800/80 p-6 shadow-2xl">
         <div className="flex items-center justify-between border-b border-slate-800 pb-3">
           <div className="flex items-center gap-2">
             <Globe className="w-5 h-5 text-cyan-400" />
