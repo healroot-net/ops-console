@@ -13,7 +13,7 @@ function getPort() {
   if (portIdx !== -1 && args[portIdx + 1]) {
     return parseInt(args[portIdx + 1], 10);
   }
-  return process.env.PORT || 3000;
+  return process.env.PORT || 9999;
 }
 
 const port = getPort();
@@ -29,7 +29,7 @@ Usage:
   ops help                  Show this help message
 
 Options:
-  -p, --port <number>       Port number to bind (Default: 3000)
+  -p, --port <number>       Port number to bind (Default: 9999)
 `);
 }
 

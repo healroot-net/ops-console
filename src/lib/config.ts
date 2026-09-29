@@ -37,7 +37,7 @@ function generateRandomSecret(): string {
 
 export function getDefaultConfig(): OpsConfig {
   return {
-    port: 3000,
+    port: 9999,
     pin: process.env.OPS_PIN || '8888',
     secret: process.env.OPS_SECRET || generateRandomSecret(),
     allowLocalOnly: false,
@@ -46,7 +46,7 @@ export function getDefaultConfig(): OpsConfig {
       enabled: true,
       server: process.env.NTFY_SERVER || 'https://ntfy.sh',
       topic: process.env.NTFY_TOPIC || `ops-${crypto.randomBytes(4).toString('hex')}`,
-      dashboardUrl: process.env.OPS_DASHBOARD_URL || 'http://localhost:3000',
+      dashboardUrl: process.env.OPS_DASHBOARD_URL || 'http://localhost:9999',
     },
     targets: [
       {

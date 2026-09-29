@@ -52,7 +52,7 @@ export async function sendNtfyAlert(options: NtfyAlertOptions): Promise<{ succes
   const topic = options.topic || config.ntfy.topic;
   const server = config.ntfy.server || 'https://ntfy.sh';
   const priority = options.priority || 'default';
-  const dashboardUrl = options.clickUrl || config.ntfy.dashboardUrl || 'http://localhost:3000';
+  const dashboardUrl = options.clickUrl || config.ntfy.dashboardUrl || 'http://localhost:9999';
 
   if (!topic) {
     return { success: false, message: 'No ntfy topic specified.' };

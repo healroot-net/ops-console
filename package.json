@@ -16,10 +16,10 @@
     "lightweight",
     "vps"
   ],
-  "author": "Ops Console Team",
+  "author": "HealRoot <support@healroot.net>",
   "license": "MIT",
   "scripts": {
-    "dev": "next dev -p 3000",
+    "dev": "next dev -p 9999",
     "build": "next build && cp -r .next/static .next/standalone/.next/ 2>/dev/null || true",
     "start": "node .next/standalone/server.js",
     "lint": "next lint"

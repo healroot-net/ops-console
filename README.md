@@ -19,8 +19,8 @@
 If you use an AI assistant (Cursor, Claude Code, Windsurf, etc.), paste this single prompt to your agent:
 
 ```text
-"Inspect github.com/ops-console/ops-console and install ops-console on my server.
-Run it with PM2 on port 3000, and register my local web services (port 3000) as monitoring targets."
+"Inspect github.com/healroot/ops-console and install ops-console on my server.
+Run it with PM2 on port 9999, and register my local web services (port 3000) as monitoring targets."
 ```
 
 Your AI agent will read `llms.txt` from this repository and set up everything automatically.
@@ -34,17 +34,17 @@ Your AI agent will read `llms.txt` from this repository and set up everything au
 # 1. Install globally
 npm install -g ops-console
 
-# 2. Start dashboard on port 3000
-ops start -p 3000
+# 2. Start dashboard on port 9999
+ops start -p 9999
 
 # 3. Open in browser
-open http://localhost:3000
+open http://localhost:9999
 ```
 
 ### Option 2: Run with PM2 Daemon
 ```bash
 # Keep ops running 24/7 in the background
-pm2 start ops --name "ops-console" -- start -p 3000
+pm2 start ops --name "ops-console" -- start -p 9999
 ```
 
 ---
@@ -73,7 +73,7 @@ pm2 start ops --name "ops-console" -- start -p 3000
 Want to extend Ops Console? You don't need to learn the codebase. Just ask your AI agent:
 
 ### 1. Connect Cloudflare Tunnel (Free Public HTTPS)
-> *"Configure a Cloudflare Tunnel for ops-console on port 3000 using my domain ops.mydomain.com so I can access it from outside."*
+> *"Configure a Cloudflare Tunnel for ops-console on port 9999 using my domain ops.mydomain.com so I can access it from outside."*
 
 ### 2. Switch from ntfy to Telegram Alerts
 > *"Modify src/lib/alerts/ntfy.ts to dispatch crash alerts to my Telegram bot token <TOKEN> and chat ID <CHAT_ID>."*
@@ -89,7 +89,7 @@ On first launch, Ops Console automatically creates a config file at `~/.ops/conf
 
 ```json
 {
-  "port": 3000,
+  "port": 9999,
   "pin": "8888",
   "ntfy": {
     "enabled": true,
@@ -112,4 +112,4 @@ On first launch, Ops Console automatically creates a config file at `~/.ops/conf
 ## 📄 License & Credits
 
 Released under the [MIT License](LICENSE).  
-Maintained with ❤️ by the **Ops Console** community & contributors.
+Maintained with ❤️ by the **HealRoot** team.
