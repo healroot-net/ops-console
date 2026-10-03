@@ -48,7 +48,7 @@ export async function checkSingleHealth(
   target: MonitoredTarget,
   maxRetries: number = 1
 ): Promise<HealthCheckResult> {
-  const defaultTimeout = target.type === 'public_domain' ? 8000 : 4000;
+  const defaultTimeout = target.type === 'public_domain' ? 15000 : 4000;
   const timeoutMs = target.timeoutMs || defaultTimeout;
 
   let attempt = 0;
@@ -66,7 +66,7 @@ export async function checkSingleHealth(
   if (lastResult.ok) {
     const expected = target.expectedStatus;
     const isExpected = expected ? lastResult.status === expected : (lastResult.status >= 200 && lastResult.status < 400);
-    const latencyThreshold = target.type === 'public_domain' ? 4000 : 2000;
+    const latencyThreshold = target.type === 'public_domain' ? 7000 : 2000;
     const isDegraded = !isExpected || lastResult.latency > latencyThreshold;
 
     return {
